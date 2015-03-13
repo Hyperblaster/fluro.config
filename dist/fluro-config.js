@@ -1,10 +1,11 @@
+app.constant('$api_url', getProperty('fluro_url'));
 //////////////////////////////////////////
 
 //Create Fluro Config
 angular.module('fluro.config', [])
 
 // config module has provider with same name
-.provider('FluroConfig', function() {
+.provider('Fluro', function() {
     // initial / default config
     var config = {
         fluro_url: 'http://api.fluro.io'

@@ -7,7 +7,7 @@ angular.module('fluro.config', [])
 .provider('Fluro', function() {
     // initial / default config
     var config = {
-        apiUrl: 'http://api.fluro.io'
+        apiURL: 'http://api.fluro.io'
     };
     return {
         set: function(settings) {

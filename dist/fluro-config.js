@@ -1,6 +1,5 @@
 angular.module('fluro.config', [])
 
-console.log('Test')
 
 .service('FluroAuthentication', function($q, Fluro) {
     return {
@@ -13,6 +12,10 @@ console.log('Test')
         },
     };
 });
+
+
+console.log('Test')
+
 //////////////////////////////////////////
 
 //Create Fluro Config

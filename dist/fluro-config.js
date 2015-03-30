@@ -1,7 +1,7 @@
 angular.module('fluro.config', [])
 
 
-.service('FluroAuthentication', function($q, Fluro) {
+.factory('FluroAuthentication', function($q, Fluro) {
     return {
         'request': function(config) {
             if (Fluro.token) {
@@ -14,7 +14,6 @@ angular.module('fluro.config', [])
 });
 
 
-console.log('Test')
 
 //////////////////////////////////////////
 

@@ -31,23 +31,12 @@ angular.module('fluro.config', [])
             if (Fluro.token) {
                 config.headers.Authorization = 'Bearer ' + Fluro.token;
             }
+
+            //Add the browsers date 
+            config.headers['fluro-request-date'] = new Date();          
             return config;
         },
     };
-})
-
-
-.service('FluroTimezone', function($q, Fluro) {
-    return {
-        'request': function(config) {
-            
-                config.headers['x-request-date'] = new Date();            
-         return config;
-        },
-    };
 });
-
-
-
 
 

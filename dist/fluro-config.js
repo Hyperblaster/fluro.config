@@ -25,9 +25,6 @@ angular.module('fluro.config', [])
     };
 })
 
-
-
-
 .service('FluroAuthentication', function($q, Fluro) {
     return {
         'request': function(config) {
@@ -35,6 +32,17 @@ angular.module('fluro.config', [])
                 config.headers.Authorization = 'Bearer ' + Fluro.token;
             }
             return config;
+        },
+    };
+})
+
+
+.service('FluroTimezone', function($q, Fluro) {
+    return {
+        'request': function(config) {
+            
+                config.headers['x-request-date'] = new Date();            
+         return config;
         },
     };
 });

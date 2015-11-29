@@ -33,7 +33,7 @@ angular.module('fluro.config', [])
             }
 
             //Add the browsers date 
-            config.headers['fluro-request-date'] = new Date().toISOString();
+            config.headers['fluro-request-date'] = new Date();
             config.headers['fluro-timezone'] = new Date().getTimezoneOffset() * 60 * 1000;
             return config;
         },

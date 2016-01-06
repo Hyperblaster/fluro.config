@@ -9,8 +9,9 @@ angular.module('fluro.config', [])
     /////////////////////////////////////
 
     var config = {
-        apiURL: 'http://api.fluro.io',
+        apiURL: 'https://apiv2.fluro.io',
         token:null,
+        timezone:null,
     };
 
     /////////////////////////////////////
@@ -32,9 +33,13 @@ angular.module('fluro.config', [])
                 config.headers.Authorization = 'Bearer ' + Fluro.token;
             }
 
-            //Add the browsers date 
+            if (Fluro.timezone) {
+                config.headers['fluro-timezone'] = Fluro.timezone;
+            }
+
+            //Add the browsers date for queries 
             config.headers['fluro-request-date'] = new Date();
-            config.headers['fluro-timezone'] = new Date().getTimezoneOffset() * 60 * 1000;
+            
             return config;
         },
     };

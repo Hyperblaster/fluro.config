@@ -36,7 +36,7 @@ angular.module('fluro.config', [])
 
             var date = new Date();
 
-            if (String(Fluro.timezoneOffset).length) {
+            if (Fluro.timezoneOffset && String(Fluro.timezoneOffset).length) {
 
                 //Localized time
                 var websiteOffset = Fluro.timezoneOffset; // * 60;

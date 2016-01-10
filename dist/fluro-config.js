@@ -48,8 +48,12 @@ angular.module('fluro.config', [])
                 var hoursDifference = websiteOffset - viewerOffset;
                 var offsetDifference = hoursDifference * 60 * 1000;
 
+                console.log('Timezone Before', date.getTime())
+
                 //Adjust the date
                 date.setTime(date.getTime() + offsetDifference);
+
+                console.log('Timezone After', date.getTime())
             }
 
             config.headers['fluro-request-date'] = date;

@@ -52,7 +52,7 @@ angular.module('fluro.config', [])
                 date.setTime(date.getTime() + offsetDifference);
             }
 
-            config.headers['fluro-request-date'] = date.getUTCDate();
+            config.headers['fluro-request-date'] = date.toUTCString();
 
             ////////////////////////////////////////
 

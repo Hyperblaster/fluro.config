@@ -88,7 +88,7 @@ angular.module('fluro.config', ['ngStorage'])
     //////////////////////////
 
     controller.refresh = function(successCallback, errorCallback) {
-        
+
         var $http = $injector.get('$http');
         var session = $localStorage.session;
 
@@ -142,9 +142,9 @@ angular.module('fluro.config', ['ngStorage'])
     //////////////////////////
 
     controller.recall();
-    
+
     //////////////////////////
-    
+
     return controller;
 
 
@@ -156,41 +156,9 @@ angular.module('fluro.config', ['ngStorage'])
     return {
         'request': function(config) {
 
-            if (config.url.indexOf('/token') != -1){
+            if (config.url.indexOf('/token') != -1) {
                 console.log(config.url, 'by pass token append')
                 return config;
-            }
-
-
-
-            //Check if the token might expire
-            if (Fluro.tokenExpires) {
-
-                //Check if it's expired
-                var expired = FluroTokenService.hasExpired();
-                console.log('Has expired', expired);
-
-                if (expired) {
-                    console.log('token expired and requires refresh');
-                    //Wait for a result
-                    var deferred = $q.defer();
-
-
-                    function refreshSuccess(res) {
-                        console.log('Refreshed successfully', res)
-                        deferred.resolve(config);
-                    }
-
-                    function refreshFailed(res) {
-                        console.log('Refresh failed', res)
-                        deferred.reject(config);
-                    }
-
-                    FluroTokenService.refresh(refreshSuccess, refreshFailed);
-
-                    return deferred.promise;
-                }
-
             }
 
             //Add Fluro token to headers
@@ -223,7 +191,42 @@ angular.module('fluro.config', ['ngStorage'])
 
             ////////////////////////////////////////
 
+
+            //Check if the token might expire
+            if (Fluro.tokenExpires) {
+
+                //Check if it's expired
+                var expired = FluroTokenService.hasExpired();
+                console.log('Has expired', expired);
+
+                if (expired) {
+                    console.log('token expired and requires refresh');
+                    //Wait for a result
+                    var deferred = $q.defer();
+
+
+                    function refreshSuccess(res) {
+                        console.log('Refreshed successfully', res)
+                        deferred.resolve(config);
+                    }
+
+                    function refreshFailed(res) {
+                        console.log('Refresh failed', res)
+                        deferred.reject(config);
+                    }
+
+                    FluroTokenService.refresh(refreshSuccess, refreshFailed);
+
+                    return deferred.promise;
+                }
+            }
+
+            
             return config;
+
+
+
+
 
 
 

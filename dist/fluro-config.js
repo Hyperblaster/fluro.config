@@ -208,7 +208,10 @@ angular.module('fluro.config', ['ngStorage'])
 
 
                     function refreshSuccess(res) {
-                        console.log('Refreshed successfully', res)
+                        console.log('Refreshed successfully', res);
+
+                        //Update with the new token
+                        config.headers.Authorization = 'Bearer ' + res.token;
                         deferred.resolve(config);
                     }
 

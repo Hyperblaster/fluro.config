@@ -27,7 +27,7 @@ angular.module('fluro.config', [])
 
 
 
-.service('FluroTokenService', function($rootScope, $injector, Fluro) {
+.service('FluroTokenService', function($rootScope, $injector, $localStorage, Fluro) {
 
     var controller = {};
 
@@ -35,13 +35,13 @@ angular.module('fluro.config', [])
 
     controller.recall = function() {
 
-        if (localStorage.session) {
-            $rootScope.user = localStorage.session;
-            Fluro.token = localStorage.session.sessionToken;
-            Fluro.tokenExpires = localStorage.session.expires;
-            Fluro.refreshToken = localStorage.session.refreshToken;
+        if ($localStorage.session) {
+            $rootScope.user = $localStorage.session;
+            Fluro.token = $localStorage.session.sessionToken;
+            Fluro.tokenExpires = $localStorage.session.expires;
+            Fluro.refreshToken = $localStorage.session.refreshToken;
 
-            console.log('Recall', localStorage.session);
+            console.log('Recall', $localStorage.session);
         } else {
             console.log('Nothin!');
             controller.deleteSession();
@@ -58,7 +58,7 @@ angular.module('fluro.config', [])
 
         request.success(function(res) {
             console.log('Token Success', res);
-            localStorage.session = res;
+            $localStorage.session = res;
             controller.recall();
 
             if (successCallback) {
@@ -77,8 +77,8 @@ angular.module('fluro.config', [])
     //////////////////////////
 
     controller.hasExpired = function() {
-        if (localStorage.session) {
-            var expiry = new Date(localStorage.session.expires);
+        if ($localStorage.session) {
+            var expiry = new Date($localStorage.session.expires);
             var now = new Date();
             return (expiry.getTime() <= now.getTime());
         }
@@ -89,7 +89,7 @@ angular.module('fluro.config', [])
     controller.refresh = function(successCallback, errorCallback) {
         
         var $http = $injector.get('$http');
-        var session = localStorage.session;
+        var session = $localStorage.session;
 
         if (session) {
             if (session.refreshToken) {
@@ -99,7 +99,7 @@ angular.module('fluro.config', [])
 
                 request.success(function(res) {
                     console.log('Refresh Token Success', res);
-                    localStorage.session = res;
+                    $localStorage.session = res;
                     controller.recall();
 
                     if (successCallback) {
@@ -122,7 +122,7 @@ angular.module('fluro.config', [])
     //////////////////////////
 
     controller.deleteSession = function() {
-        delete localStorage.session;
+        delete $localStorage.session;
         delete $rootScope.user;
 
         //Remove the fluro token

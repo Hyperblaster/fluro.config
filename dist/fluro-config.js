@@ -1,5 +1,8 @@
 //////////////////////////////////////////
 
+
+console.log('NEW');
+
 //Create Fluro Config
 angular.module('fluro.config', ['ngStorage'])
 
@@ -159,6 +162,7 @@ angular.module('fluro.config', ['ngStorage'])
             if (config.url.indexOf('/token/refresh') === -1){
                 return config;
             }
+
 
 
             //Check if the token might expire

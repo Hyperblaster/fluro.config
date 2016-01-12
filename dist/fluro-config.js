@@ -1,7 +1,7 @@
 //////////////////////////////////////////
 
 //Create Fluro Config
-angular.module('fluro.config', [])
+angular.module('fluro.config', ['ngStorage'])
 
 // config module has provider with same name
 .provider('Fluro', function() {

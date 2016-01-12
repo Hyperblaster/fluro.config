@@ -100,7 +100,9 @@ angular.module('fluro.config', ['ngStorage'])
 
                 request.success(function(res) {
                     console.log('Refresh Token Success', res);
-                    $localStorage.session = res;
+                    $localStorage.session.refreshToken = res.refreshToken;
+                    $localStorage.session.token = res.token;
+                    $localStorage.session.expires = res.expires;
                     controller.recall();
 
                     if (successCallback) {

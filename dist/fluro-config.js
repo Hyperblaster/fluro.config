@@ -25,6 +25,41 @@ angular.module('fluro.config', [])
     };
 })
 
+
+
+.service('FluroTokenService', function($rootScope, $http, Fluro) {
+
+    var controller = {};
+
+    //////////////////////////
+
+    //Submit and send back the user
+    controller.login = function(details, successCallback, errorCallback) {
+        $http.post(Fluro.apiURL + '/token/login', details)
+            .success(function(res) {
+                console.log('Token Success', res);
+
+                if (successCallback) {
+                    successCallback(res);
+                }
+            })
+            .error(function(res) {
+                console.log('Token Error', res);
+                if (errorCallback) {
+                    errorCallback(res);
+                }
+            });
+
+    };
+
+    //////////////////////////
+
+    return controller;
+
+})
+
+
+
 .service('FluroAuthentication', function($q, Fluro) {
     return {
         'request': function(config) {

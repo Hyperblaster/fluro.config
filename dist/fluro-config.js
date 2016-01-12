@@ -161,6 +161,8 @@ angular.module('fluro.config', ['ngStorage'])
                 return config;
             }
 
+            var deferred = $q.defer();
+
             //Add Fluro token to headers
             if (Fluro.token) {
                 config.headers.Authorization = 'Bearer ' + Fluro.token;
@@ -202,7 +204,7 @@ angular.module('fluro.config', ['ngStorage'])
                 if (expired) {
                     console.log('token expired and requires refresh');
                     //Wait for a result
-                    var deferred = $q.defer();
+                    
 
 
                     function refreshSuccess(res) {
@@ -216,13 +218,15 @@ angular.module('fluro.config', ['ngStorage'])
                     }
 
                     FluroTokenService.refresh(refreshSuccess, refreshFailed);
-
-                    return deferred.promise;
+                } else {
+                    deferred.resolve(config);
                 }
+            } else {
+                deferred.resolve(config);
             }
 
-            
-            return config;
+
+            return deferred.promise;;
 
 
 

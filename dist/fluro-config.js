@@ -29,7 +29,9 @@ angular.module('fluro.config', [])
 
 .service('FluroTokenService', function($rootScope, $injector, Fluro) {
 
-    $http = $injector.get('$http');
+    console.log('TESTING');
+
+    
 
     var controller = {};
 
@@ -45,6 +47,8 @@ angular.module('fluro.config', [])
 
     //Submit and send back the user
     controller.login = function(details, successCallback, errorCallback) {
+
+        var $http = $injector.get('$http');
 
         var request = $http.post(Fluro.apiURL + '/token/login', details);
 
@@ -83,6 +87,7 @@ angular.module('fluro.config', [])
 
     controller.refresh = function(successCallback, errorCallback) {
 
+        var $http = $injector.get('$http');
         var session = localStorage.session;
 
         if (session) {

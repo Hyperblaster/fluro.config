@@ -159,9 +159,8 @@ angular.module('fluro.config', ['ngStorage'])
             //Check if the token might expire
             if (Fluro.tokenExpires) {
 
-                var expiry = new Date(Fluro.tokenExpires);
-                var now = new Date();
-                var expired = (expiry.getTime() <= now.getTime());
+                //Check if it's expired
+                var expired = FluroTokenService.hasExpired();
 
                 if (expired) {
                     console.log('token expired and requires refresh');

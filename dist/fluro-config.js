@@ -59,6 +59,12 @@ angular.module('fluro.config', ['ngStorage'])
         request.success(function(res) {
             console.log('Token Success', res);
             $localStorage.session = res;
+
+             var expiryDate = new Date();
+                    expiryDate.setSeconds(expiryDate.getSeconds() + 10);
+                    $localStorage.session.expires = expiryDate.getTime()//res.expires;
+
+                    
             controller.recall();
 
             if (successCallback) {

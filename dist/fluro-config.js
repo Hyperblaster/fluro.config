@@ -156,6 +156,11 @@ angular.module('fluro.config', ['ngStorage'])
     return {
         'request': function(config) {
 
+            if (config.url.indexOf('/token/refresh') === -1){
+                return config;
+            }
+
+
             //Check if the token might expire
             if (Fluro.tokenExpires) {
 

@@ -157,6 +157,7 @@ angular.module('fluro.config', ['ngStorage'])
         'request': function(config) {
 
             if (config.url.indexOf('/token') != -1){
+                console.log(config.url, 'by pass token append')
                 return config;
             }
 

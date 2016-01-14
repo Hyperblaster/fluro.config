@@ -91,6 +91,34 @@ angular.module('fluro.config', ['ngStorage'])
 
     //////////////////////////
 
+    //Submit and send back the user
+    controller.getTokenForAccount = function(accountId, successCallback, errorCallback) {
+
+        var $http = $injector.get('$http');
+        var storage = controller.storageLocation();
+
+        var request = $http.post(Fluro.apiURL + '/token/account/' + accountId);
+
+        request.success(function(res) {
+            console.log('Account Token Success', res);
+            storage.session = res;
+            controller.recall();
+
+            if (successCallback) {
+                successCallback(res);
+            }
+        });
+
+        request.error(function(res) {
+            console.log('Account Token Error', res);
+            if (errorCallback) {
+                errorCallback(res);
+            }
+        });
+    };
+
+    //////////////////////////
+
     controller.hasExpired = function() {
 
         var storage = controller.storageLocation();

@@ -9,8 +9,9 @@ angular.module('fluro.config', ['ngStorage'])
     /////////////////////////////////////
 
     var config = {
-        apiURL: 'https://apiv2.fluro.io',
-        token: null,
+        apiURL: 'https://apiv2.fluro.io', //Use the basic Fluro API URL by default
+        token: null, //Set a token to use for Authentication
+        sessionStorage:false, //Set to true if you want to use sessionStorage instead of localStorage
     };
 
     /////////////////////////////////////
@@ -44,7 +45,7 @@ angular.module('fluro.config', ['ngStorage'])
 
     //////////////////////////
 
-    controller.recall = function(deleteSessionOnFail) {
+    controller.recall = function() {
 
         //Get the storage location
         var storage = controller.storageLocation();
@@ -56,9 +57,7 @@ angular.module('fluro.config', ['ngStorage'])
             Fluro.refreshToken = storage.session.refreshToken;
            //console.log('Recall', storage.session);
         } else {
-            if(deleteSessionOnFail) {
-                controller.deleteSession();
-            }
+            console.log('No existing session');
         }
     }
 

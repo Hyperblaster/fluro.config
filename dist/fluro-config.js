@@ -214,8 +214,8 @@ angular.module('fluro.config', ['ngStorage'])
     return {
         'request': function(config) {
 
-            if (config.url.indexOf('/token/refresh') != -1 || config.url.indexOf('/token/account') != -1) {
-                console.log(config.url, 'by pass token append')
+            if (config.url.indexOf('/token/refresh') != -1 ) {
+                console.log(config.url, 'dont send token when refreshing')
                 return config;
             }
 
@@ -223,6 +223,7 @@ angular.module('fluro.config', ['ngStorage'])
 
             //Add Fluro token to headers
             if (Fluro.token) {
+                console.log('Use token', Fluro.token);
                 config.headers.Authorization = 'Bearer ' + Fluro.token;
             }
 

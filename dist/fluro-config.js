@@ -215,7 +215,7 @@ angular.module('fluro.config', ['ngStorage'])
         'request': function(config) {
 
             function startsWith(string) {
-                return string.slice(0, string.length) === string;
+                return config.url.slice(0, string.length) === string;
             }
 
             //If we are hitting an external url then just return here

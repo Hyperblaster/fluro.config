@@ -215,10 +215,11 @@ angular.module('fluro.config', ['ngStorage'])
         'request': function(config) {
 
             function startsWith(string) {
+                //Check if the domain name matches the string
                 return config.url.slice(0, string.length) === string;
             }
 
-            //If we are hitting an external url then just return here
+            //If we are hitting a url that doesnt match the api domain then just return here
             if(!startsWith(Fluro.apiURL)) {
                 return config;
             }

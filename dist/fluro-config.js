@@ -112,6 +112,35 @@ angular.module('fluro.config', ['ngStorage'])
 
     //////////////////////////
 
+    controller.collectToken = function(transferToken) {
+
+
+        var $http = $injector.get('$http');
+        var storage = controller.storageLocation();
+        var request = $http.post(Fluro.apiURL + '/token/collect/' + transferToken);
+
+        //////////////////////////
+
+        request.success(function(res) {
+            
+            //Store the authentication 
+            storage.session = res;
+            controller.recall();
+
+            console.log('Collected User Session', res);
+        });
+
+        //////////////////////////
+
+        request.error(function(res) {
+            console.log('Error collecting token', token)
+        });
+
+    }
+
+
+    //////////////////////////
+
     //Submit and send back the user
     controller.getTokenForAccount = function(accountId, options) {
 

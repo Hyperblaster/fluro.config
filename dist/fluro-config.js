@@ -276,8 +276,10 @@ angular.module('fluro.config', ['ngStorage'])
                 request.error(function(res) {
 
                     if(res == 'invalid_refresh_token') {
-                        //console.log('Error refreshing token', res)
+                        console.log('your token has expired');
                         controller.deleteSession();
+                    } else {
+                        console.log('Error refreshing token', res);
                     }
 
                     if (errorCallback) {

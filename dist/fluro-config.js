@@ -262,7 +262,7 @@ angular.module('fluro.config', ['ngStorage'])
                 });
 
                 request.success(function(res) {
-                    console.log('token has been refreshed new token is:', res.token);
+                    //console.log('token has been refreshed new token is:', res.token);
                     storage.session.refreshToken = res.refreshToken;
                     storage.session.token = res.token;
                     storage.session.expires = res.expires;
@@ -279,7 +279,7 @@ angular.module('fluro.config', ['ngStorage'])
                         console.log('your token has expired');
                         controller.deleteSession();
                     } else {
-                        console.log('error refreshing token');
+                        console.log('error refreshing token', res);
                     }
 
                     if (errorCallback) {
@@ -374,7 +374,7 @@ angular.module('fluro.config', ['ngStorage'])
             //If we're bypassing the interceptor
             //then go no further than here
             if(config.bypassInterceptor) {
-                console.log('bypass interceptor');
+                //console.log('bypass interceptor');
                 return config;
             }
 
@@ -391,7 +391,6 @@ angular.module('fluro.config', ['ngStorage'])
 
             //Add Fluro token to headers
             if (Fluro.token) {
-                console.log('use token for request', config.url, Fluro.token);
                 config.headers.Authorization = 'Bearer ' + Fluro.token;
             }
 
@@ -413,24 +412,31 @@ angular.module('fluro.config', ['ngStorage'])
                        
                         //Update with the new token
                         config.headers.Authorization = 'Bearer ' + res.token;
-                         console.log('Refreshed so use this token now', res.token);
+                         //console.log('Refreshed so use this token now', res.token);
 
-                          console.log('Resolve call', config.url, config.headers)
+                          //console.log('Resolve call', config.url, config.headers)
                         deferred.resolve(config);
                     }
 
                     function refreshFailed(res) {
-                        console.log('refresh failed', res)
+                        //console.log('refresh failed', res)
 
                         deferred.reject(config);
                     }
 
-                    console.log('Defer call', config.url)
+                    //console.log('Defer call', config.url)
                     //Update
                     FluroTokenService.refresh(refreshSuccess, refreshFailed);
                 } else {
-                    console.log('Resolve normally');
-                    deferred.resolve(config);
+
+                    if(Fluro.token) {
+                        //Update the token again just incase (we need this!)
+                        config.headers.Authorization = 'Bearer ' + Fluro.token;
+                        deferred.resolve(config);
+                    } else {
+                        deferred.resolve(config);
+                    }
+                    
                 }
             } else {
                 deferred.resolve(config);

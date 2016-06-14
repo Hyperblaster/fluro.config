@@ -394,9 +394,13 @@ angular.module('fluro.config', ['ngStorage'])
             ////////////////////////////////////////
             ////////////////////////////////////////
 
+            //Check if it's a promise
+            var isPromise = (config && isFunction(config.then));
+            console.log('is a promise', isPromise);
+
             //If we're bypassing the interceptor
             //then go no further than here
-            if (config.bypassInterceptor) {
+            if (config.bypassInterceptor || isPromise) {
                 //console.log('bypass interceptor');
                 return config;
             }

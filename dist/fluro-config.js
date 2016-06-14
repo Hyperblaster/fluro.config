@@ -276,7 +276,7 @@ angular.module('fluro.config', ['ngStorage'])
                     //console.log('Updated token', res.token);
                     //Clear out the inflight
                     inflightRequest = null;
-                    
+
                     //console.log('token has been refreshed new token is:', res.token);
                     storage.session.refreshToken = res.refreshToken;
                     storage.session.token = res.token;
@@ -394,86 +394,90 @@ angular.module('fluro.config', ['ngStorage'])
             ////////////////////////////////////////
             ////////////////////////////////////////
 
-            //If we're bypassing the interceptor
-            //then go no further than here
-            if (config.bypassInterceptor) {
-                console.log('bypass interceptor', config);
-                return config;
-            } else {
-                console.log('Normal interceptor', config);
-            }
+            //Listen just in case a promise was sent back instead of a config object
+            $q.when(config).then(function(config) {
 
-            ////////////////////////////////////////
-            ////////////////////////////////////////
+                //If we're bypassing the interceptor
+                //then go no further than here
+                if (config.bypassInterceptor) {
 
-            //If it's a refresh request ignore authentication
-            if (config.url.indexOf('/token/refresh') != -1) {
-                return config;
-            }
+                    console.log('Bypass the interceptor')
+                    return config;
+                }
 
-            //Add Fluro token to headers
-            if (!Fluro.token) {
-                return config;
-            }
+                ////////////////////////////////////////
+                ////////////////////////////////////////
 
-            ////////////////////////////////////////
-            ////////////////////////////////////////
+                //If it's a refresh request ignore authentication
+                if (config.url.indexOf('/token/refresh') != -1) {
+                    return config;
+                }
 
-            //Now delay the in flight request
-            var deferred = $q.defer();
+                //Add Fluro token to headers
+                if (!Fluro.token) {
+                    return config;
+                }
 
-            //Check if the token might expire
-            if (Fluro.tokenExpires) {
+                ////////////////////////////////////////
+                ////////////////////////////////////////
 
-                //Check if it's expired
-                var expired = FluroTokenService.hasExpired();
-                //console.log('Has expired', expired, Fluro.tokenExpires);
+                //Now delay the in flight request
+                var deferred = $q.defer();
 
-               //TESTING expired = true;
+                //Check if the token might expire
+                if (Fluro.tokenExpires) {
 
-                //We've expired
-                if (expired) {
+                    //Check if it's expired
+                    var expired = FluroTokenService.hasExpired();
+                    //console.log('Has expired', expired, Fluro.tokenExpires);
 
-                    //Wait for a result
-                    function refreshSuccess(res) {
+                    //TESTING expired = true;
 
-                        //Get the new token
-                        var newToken = res.data;
+                    //We've expired
+                    if (expired) {
 
-                        //Update with the new token
-                        config.headers.Authorization = 'Bearer ' + newToken.token;
-                        //console.log('refreshed and using', newToken, newToken.token);
+                        //Wait for a result
+                        function refreshSuccess(res) {
 
-                        //console.log('Resolve call', config.url, config.headers)
+                            //Get the new token
+                            var newToken = res.data;
+
+                            //Update with the new token
+                            config.headers.Authorization = 'Bearer ' + newToken.token;
+                            //console.log('refreshed and using', newToken, newToken.token);
+
+                            //console.log('Resolve call', config.url, config.headers)
+                            deferred.resolve(config);
+                        }
+
+                        function refreshFailed(res) {
+                            // console.log('refresh failed', res)
+                            deferred.reject(config);
+                        }
+
+                        //////////////////////////////////////////////
+
+                        var refreshRequest = FluroTokenService.refresh();
+                        refreshRequest.then(refreshSuccess, refreshFailed);
+
+                        //////////////////////////////////////////////
+
+                    } else {
+                        //console.log('Not expired, carry on')
+                        config.headers.Authorization = 'Bearer ' + Fluro.token;
                         deferred.resolve(config);
                     }
 
-                    function refreshFailed(res) {
-                       // console.log('refresh failed', res)
-                        deferred.reject(config);
-                    }
-
-                    //////////////////////////////////////////////
-
-                    var refreshRequest = FluroTokenService.refresh();
-                    refreshRequest.then(refreshSuccess, refreshFailed);
-
-                    //////////////////////////////////////////////
-
                 } else {
-                    //console.log('Not expired, carry on')
+                    //console.log('Doesnt expire so keep on keeping on')
                     config.headers.Authorization = 'Bearer ' + Fluro.token;
                     deferred.resolve(config);
                 }
 
-            } else {
-                //console.log('Doesnt expire so keep on keeping on')
-                config.headers.Authorization = 'Bearer ' + Fluro.token;
-                deferred.resolve(config);
-            }
 
+                return deferred.promise;
 
-            return deferred.promise;
+            })
 
         },
     };

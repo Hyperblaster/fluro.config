@@ -399,7 +399,7 @@ angular.module('fluro.config', ['ngStorage'])
                 console.log('Bypass the interceptor')
                 return config;
             } else {
-                console.log('USING CONFIG'. config);
+                console.log('USING CONFIG', config);
             }
 
             ////////////////////////////////////////

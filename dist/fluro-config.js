@@ -353,11 +353,6 @@ angular.module('fluro.config', ['ngStorage'])
     return {
         'request': function(config) {
 
-            //Return immediately if it's a promise
-            if(config && angular.isFunction(config.then)) {
-                return config;
-            }
-
             ////////////////////////////////////////
             ////////////////////////////////////////
 

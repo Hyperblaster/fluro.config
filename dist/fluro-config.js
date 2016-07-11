@@ -78,9 +78,19 @@ angular.module('fluro.config', ['ngStorage'])
 
         //////////////////////////////////////
 
+        //Url to login to
+        var url = Fluro.apiURL + '/token/login';
+
+        //If we are logging in to a managed account use a different endpoint
+        if (options.managedAccount) {
+            url = Fluro.apiURL + '/managed/'+ options.managedAccount +'/login';
+        }
+
+        //////////////////////////////////////
+
         var $http = $injector.get('$http');
         var storage = controller.storageLocation();
-        var request = $http.post(Fluro.apiURL + '/token/login', details);
+        var request = $http.post(url, details);
 
         //////////////////////////
 
@@ -242,6 +252,10 @@ angular.module('fluro.config', ['ngStorage'])
     }
 
     //////////////////////////
+    //////////////////////////
+    //////////////////////////
+    //////////////////////////
+    //////////////////////////
 
     var inflightRequest;
 
@@ -265,8 +279,11 @@ angular.module('fluro.config', ['ngStorage'])
 
         if (session) {
             if (session.refreshToken) {
+
+                //Make the request to refresh the token
                 inflightRequest = $http.post(Fluro.apiURL + '/token/refresh', {
-                    refreshToken: session.refreshToken
+                    refreshToken: session.refreshToken,
+                    managed:session.accountType == 'managed',
                 });
 
                 ///////////////////////////////////////////////////////

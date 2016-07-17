@@ -468,14 +468,14 @@ angular.module('fluro.config', ['ngStorage'])
 
                     function refreshFailed(res) {
 
-                        if(controller.backup) {
-                            if (controller.backup.token) {
-                                Fluro.token = controller.backup.token;
+                        if(FluroTokenService.backup) {
+                            if (FluroTokenService.backup.token) {
+                                Fluro.token = FluroTokenService.backup.token;
                                 config.headers.Authorization = 'Bearer ' + Fluro.token;
                             }
 
-                            if (controller.backup.user) {
-                                $rootScope.user = controller.backup.user;
+                            if (FluroTokenService.backup.user) {
+                                $rootScope.user = FluroTokenService.backup.user;
                             }
 
                             deferred.resolve(config);

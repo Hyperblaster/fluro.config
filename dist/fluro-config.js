@@ -305,6 +305,9 @@ angular.module('fluro.config', ['ngStorage'])
                     }
                 });
 
+                ///////////////////////////////////////////////////////
+
+                //Request error
                 inflightRequest.error(function(res) {
 
                     //Clear out the inflight
@@ -345,34 +348,6 @@ angular.module('fluro.config', ['ngStorage'])
         delete Fluro.tokenExpires;
         delete Fluro.refreshToken;
 
-
-        ///////////////////////////////////////////////////////
-
-        function getMetaKey(stringKey) {
-            var metas = document.getElementsByTagName('meta');
-
-            for (i = 0; i < metas.length; i++) {
-                if (metas[i].getAttribute("property") == stringKey) {
-                    return metas[i].getAttribute("content");
-                }
-            }
-            return "";
-        }
-
-        ///////////////////////////////////////////////////////
-
-
-        //Check to see if a token exists on the application
-        var access_token = getMetaKey('fluro_application_key');
-
-        //Use the backup token
-        if(access_token && access_token.length) {
-            Fluro.token = access_token;
-        }
-
-        console.log('Attempt to use backup token', access_token);
-
-        
     }
 
     //////////////////////////
@@ -487,9 +462,26 @@ angular.module('fluro.config', ['ngStorage'])
                         deferred.resolve(config);
                     }
 
+                    /////////////////////////////////////////
+                    /////////////////////////////////////////
+                    /////////////////////////////////////////
+
                     function refreshFailed(res) {
-                        // console.log('refresh failed', res)
-                        deferred.reject(config);
+
+                        if(controller.backup) {
+                            if (controller.backup.token) {
+                                Fluro.token = controller.backup.token;
+                                config.headers.Authorization = 'Bearer ' + Fluro.token;
+                            }
+
+                            if (controller.backup.user) {
+                                $rootScope.user = controller.backup.user;
+                            }
+
+                            deferred.resolve(config);
+                        } else {
+                            deferred.reject(config);
+                        }
                     }
 
                     //////////////////////////////////////////////
@@ -673,6 +665,8 @@ angular.module('fluro.config', ['ngStorage'])
                         //Finish up and resolve
                         deferred.resolve(config);
                     }
+
+                    //////////////////////////////////////////////
 
                     function refreshFailed(res) {
                         //console.log('Customer refresh failed', res)

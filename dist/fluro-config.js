@@ -81,8 +81,18 @@ angular.module('fluro.config', ['ngStorage'])
         var url = Fluro.apiURL + '/token/login';
 
         //If we are logging in to a managed account use a different endpoint
+        if (options.application) {
+            url = '/fluro/application/login';
+        }
+
+        //If we are logging in to a managed account use a different endpoint
         if (options.managedAccount) {
             url = Fluro.apiURL + '/managed/' + options.managedAccount + '/login';
+        }
+
+        //If we are logging in to a managed account use a different endpoint
+        if (options.url) {
+            url = options.url;
         }
 
         //////////////////////////////////////
@@ -553,16 +563,17 @@ angular.module('fluro.config', ['ngStorage'])
         ////////////////////////////
 
         //Login with user credentials
-        controller.login = function(credentials) {
+        controller.login = function(credentials, options) {
 
             //Get the storage location
             var storage = controller.storageLocation();
 
-            //Login but don't authenticate automatically
-            var request = FluroTokenService.login(credentials, {
-                disableAutoAuthenticate: true
-            });
+            //Disable this
+            options.disableAutoAuthenticate = true;
 
+            //Login but don't authenticate automatically
+            var request = FluroTokenService.login(credentials, options);
+        
             ////////////////////////
 
             function loginComplete(res) {

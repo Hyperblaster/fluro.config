@@ -57,6 +57,73 @@ angular.module('fluro.config', ['ngStorage'])
         }
     }
 
+     //////////////////////////
+
+    //Register and send back the user
+    controller.signup = function(details, options) {
+
+        if (!options) {
+            options = {};
+        }
+
+        //////////////////////////////////////
+
+        //Let this service automatically refresh and use tokens
+        var autoAuthenticate = true;
+
+        if (options.disableAutoAuthenticate) {
+            autoAuthenticate = false;
+        }
+
+        //////////////////////////////////////
+
+        //Url to login to
+        var url = Fluro.apiURL + '/token/signup';
+
+        //If we are logging in to a managed account use a different endpoint
+        if (options.application) {
+            url = '/fluro/application/signup';
+        }
+
+        //If we are logging in to a managed account use a different endpoint
+        if (options.url) {
+            url = options.url;
+        }
+
+        //////////////////////////////////////
+
+        var $http = $injector.get('$http');
+        var storage = controller.storageLocation();
+        var request = $http.post(url, details);
+
+        //////////////////////////
+
+        request.success(function(res) {
+
+            //Store the authentication 
+            if (autoAuthenticate) {
+                storage.session = res;
+                controller.recall();
+            }
+
+            if (options.success) {
+                options.success(res);
+            }
+        });
+
+        //////////////////////////
+
+        request.error(function(res) {
+            if (options.error) {
+                options.error(res);
+            }
+        });
+
+        //////////////////////////
+
+        return request;
+    };
+
     //////////////////////////
 
     //Submit and send back the user
@@ -594,6 +661,47 @@ angular.module('fluro.config', ['ngStorage'])
             ////////////////////////
 
             request.then(loginComplete, loginFailed);
+
+            ////////////////////////
+
+            return request;
+        }
+
+
+        ////////////////////////////
+
+        //Register with user credentials
+        controller.signup = function(credentials, options) {
+
+            //Get the storage location
+            var storage = controller.storageLocation();
+
+            //Disable this
+            options.disableAutoAuthenticate = true;
+
+            //Login but don't authenticate automatically
+            var request = FluroTokenService.signup(credentials, options);
+        
+            ////////////////////////
+
+            function signupComplete(res) {
+
+                //Save the storedUsers details
+                storage[key] = res.data;
+
+                ////////////////////////////////////////
+                console.log('Token Signup Success', controller.defaultStorage, storage[key]);
+            }
+
+            ////////////////////////
+
+            function signupFailed(res) {
+                console.log('Token Signup Failed', res);
+            }
+
+            ////////////////////////
+
+            request.then(signupComplete, signupFailed);
 
             ////////////////////////
 

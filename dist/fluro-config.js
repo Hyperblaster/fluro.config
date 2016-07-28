@@ -1,5 +1,7 @@
 //////////////////////////////////////////
 
+console.log('fluro.config v5.8');
+
 //Create Fluro Config
 angular.module('fluro.config', ['ngStorage'])
 

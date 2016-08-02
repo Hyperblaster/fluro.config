@@ -1,5 +1,6 @@
 //////////////////////////////////////////
 
+console.log('UPDATE CONFIG');
 
 //Create Fluro Config
 angular.module('fluro.config', ['ngStorage'])
@@ -83,6 +84,7 @@ angular.module('fluro.config', ['ngStorage'])
 
         //If we are logging in to a managed account use a different endpoint
         if (options.application) {
+            console.log('sign in to application')
             url = '/fluro/application/signup';
         }
 

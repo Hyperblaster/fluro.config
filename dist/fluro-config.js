@@ -15,16 +15,7 @@ angular.module('fluro.config', ['ngStorage'])
         sessionStorage: false, //Set to true if you want to use sessionStorage instead of localStorage
     };
 
-    var hybridAuthenticationSource;
-
-    ///////////////////////////////////////////
-
-    if(window.parent && window.parent.hybridAuthenticationSource) {
-        //Use the parent authentication if available
-        console.log('WINDOW PARENT', window.parent.hybridAuthenticationSource);
-        hybridAuthenticationSource = window.parent.hybridAuthenticationSource;
-        alert('FluroHybrid Found')
-    }
+    
 
     /////////////////////////////////////
 
@@ -33,11 +24,12 @@ angular.module('fluro.config', ['ngStorage'])
             config = settings;
         },
         $get: function() {
-            if(hybridAuthenticationSource) {
-                return hybridAuthenticationSource;
-            } else {
-                return config;
-            }
+            // if(hybridAuthenticationSource) {
+            //     return hybridAuthenticationSource;
+            // } else {
+            //     return config;
+            // }
+            return config;
             
         }
     };

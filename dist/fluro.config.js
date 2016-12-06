@@ -36,7 +36,7 @@ angular.module('fluro.config', ['ngStorage'])
 })
 
 
-.service('FluroTokenService', function($rootScope, $injector, $sessionStorage, $localStorage, Fluro) {
+.service('FluroTokenService', ['$rootScope', '$injector', '$sessionStorage', '$localStorage', 'Fluro', function($rootScope, $injector, $sessionStorage, $localStorage, Fluro) {
 
     var controller = {};
 
@@ -459,9 +459,9 @@ angular.module('fluro.config', ['ngStorage'])
 
     return controller;
 
-})
+}])
 
-.service('FluroAuthentication', function($q, Fluro, FluroTokenService) {
+.service('FluroAuthentication', ['$q', 'Fluro', 'FluroTokenService', function($q, Fluro, FluroTokenService) {
     return {
         'request': function(config) {
 
@@ -601,10 +601,10 @@ angular.module('fluro.config', ['ngStorage'])
             return deferred.promise;
         },
     };
-})
+}])
 
 //Create a storage service for keeping tokens
-.service('FluroTokenStore', function($sessionStorage, $localStorage, $q, $injector, Fluro, FluroTokenService) {
+.service('FluroTokenStore', ['$sessionStorage', '$localStorage', '$q', '$injector', 'Fluro', 'FluroTokenService', function($sessionStorage, $localStorage, $q, $injector, Fluro, FluroTokenService) {
 
     //Store instance
     //Provide a unique key to store against
@@ -940,7 +940,7 @@ angular.module('fluro.config', ['ngStorage'])
     }
 
     return storeInstance;
-});
+}]);
 
 //Use this to close off the end
 ;

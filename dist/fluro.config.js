@@ -116,24 +116,20 @@ angular.module('fluro.config', ['ngStorage'])
 
         //////////////////////////
 
-        request.success(function(res) {
+        request.then(function(res) {
 
             //Store the authentication 
             if (autoAuthenticate) {
-                storage.session = res;
+                storage.session = res.data;
                 controller.recall();
             }
 
             if (options.success) {
-                options.success(res);
+                options.success(res.data);
             }
-        });
-
-        //////////////////////////
-
-        request.error(function(res) {
+        }, function(err) {
             if (options.error) {
-                options.error(res);
+                options.error(err.data);
             }
         });
 
@@ -192,20 +188,16 @@ angular.module('fluro.config', ['ngStorage'])
 
             //Store the authentication 
             if (autoAuthenticate) {
-                storage.session = res;
+                storage.session = res.data;
                 controller.recall();
             }
 
             if (options.success) {
-                options.success(res);
+                options.success(res.data);
             }
-        });
-
-        //////////////////////////
-
-        request.error(function(res) {
+        }, function(res) {
             if (options.error) {
-                options.error(res);
+                options.error(res.data);
             }
         });
 
@@ -270,18 +262,16 @@ angular.module('fluro.config', ['ngStorage'])
 
         request.success(function(res) {
             if (autoAuthenticate) {
-                storage.session = res;
+                storage.session = res.data;
                 controller.recall();
             }
 
             if (options.success) {
-                options.success(res);
+                options.success(res.data);
             }
-        });
-
-        request.error(function(res) {
+        }, function(res) {
             if (options.error) {
-                options.error(res);
+                options.error(res.data);
             }
         });
 
@@ -314,18 +304,16 @@ angular.module('fluro.config', ['ngStorage'])
 
         request.success(function(res) {
             if (autoAuthenticate) {
-                storage.session = res;
+                storage.session = res.data;
                 controller.recall();
             }
 
             if (options.success) {
-                options.success(res);
+                options.success(res.data);
             }
-        });
-
-        request.error(function(res) {
+        }, function(res) {
             if (options.error) {
-                options.error(res);
+                options.error(res.data);
             }
         });
 
@@ -382,27 +370,22 @@ angular.module('fluro.config', ['ngStorage'])
                 ///////////////////////////////////////////////////////
 
                 //Listen for when it's finished and update the session storage
-                inflightRequest.success(function(res) {
+                inflightRequest.then(function(res) {
                     //console.log('Updated token', res.token);
                     //Clear out the inflight
                     inflightRequest = null;
 
                     //console.log('token has been refreshed new token is:', res.token);
-                    storage.session.refreshToken = res.refreshToken;
-                    storage.session.token = res.token;
-                    storage.session.expires = res.expires;
+                    storage.session.refreshToken = res.data.refreshToken;
+                    storage.session.token = res.data.token;
+                    storage.session.expires = res.data.expires;
                     controller.recall();
 
 
                     if (successCallback) {
-                        return successCallback(res);
+                        return successCallback(res.data);
                     }
-                });
-
-                ///////////////////////////////////////////////////////
-
-                //Request error
-                inflightRequest.error(function(res) {
+                }, function(err) {
 
                     //Clear out the inflight
                     inflightRequest = null;
@@ -415,7 +398,7 @@ angular.module('fluro.config', ['ngStorage'])
                     }
 
                     if (errorCallback) {
-                        return errorCallback(res);
+                        return errorCallback(err);
                     }
                 });
 
@@ -901,22 +884,18 @@ angular.module('fluro.config', ['ngStorage'])
                         inflightRequest = null;
 
                         //Update the storedUser with new token details
-                        storage[key].refreshToken = res.refreshToken;
-                        storage[key].token = res.token;
-                        storage[key].expires = res.expires;
+                        storage[key].refreshToken = res.data.refreshToken;
+                        storage[key].token = res.data.token;
+                        storage[key].expires = res.data.expires;
 
                         //Add in a success callback if needed here
-                    });
-
-                    ///////////////////////////////////////////////////////
-
-                    inflightRequest.error(function(res) {
+                    }, function(err) {
 
                         //Finish the inflight request
                         inflightRequest = null;
 
                         //If the refresh token was invalid delete the storedUser session
-                        if (res == 'invalid_refresh_token') {
+                        if (err.data == 'invalid_refresh_token') {
                             //console.log('your token has expired');
                             controller.deleteSession();
                         } else {

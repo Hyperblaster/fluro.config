@@ -184,7 +184,7 @@ angular.module('fluro.config', ['ngStorage'])
 
         //////////////////////////
 
-        request.success(function(res) {
+        request.then(function(res) {
 
             //Store the authentication 
             if (autoAuthenticate) {
@@ -260,7 +260,7 @@ angular.module('fluro.config', ['ngStorage'])
         var storage = controller.storageLocation();
         var request = $http.post(Fluro.apiURL + '/token/persona/' + personaID);
 
-        request.success(function(res) {
+        request.then(function(res) {
             if (autoAuthenticate) {
                 storage.session = res.data;
                 controller.recall();

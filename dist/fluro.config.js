@@ -216,18 +216,14 @@ angular.module('fluro.config', ['ngStorage'])
 
         //////////////////////////
 
-        request.success(function(res) {
+        request.then(function(res) {
             
             //Store the authentication 
-            storage.session = res;
+            storage.session = res.data;
             controller.recall();
 
             console.log('Collected User Session', res);
-        });
-
-        //////////////////////////
-
-        request.error(function(res) {
+        }, function(res) {
             console.log('Error collecting token', token)
         });
 
@@ -302,7 +298,7 @@ angular.module('fluro.config', ['ngStorage'])
         var storage = controller.storageLocation();
         var request = $http.post(Fluro.apiURL + '/token/account/' + accountId);
 
-        request.success(function(res) {
+        request.then(function(res) {
             if (autoAuthenticate) {
                 storage.session = res.data;
                 controller.recall();

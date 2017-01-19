@@ -195,9 +195,9 @@ angular.module('fluro.config', ['ngStorage'])
             if (options.success) {
                 options.success(res.data);
             }
-        }, function(res) {
+        }, function(err) {
             if (options.error) {
-                options.error(res.data);
+                options.error(err.data);
             }
         });
 
@@ -265,9 +265,9 @@ angular.module('fluro.config', ['ngStorage'])
             if (options.success) {
                 options.success(res.data);
             }
-        }, function(res) {
+        }, function(err) {
             if (options.error) {
-                options.error(res.data);
+                options.error(err.data);
             }
         });
 
@@ -307,9 +307,9 @@ angular.module('fluro.config', ['ngStorage'])
             if (options.success) {
                 options.success(res.data);
             }
-        }, function(res) {
+        }, function(err) {
             if (options.error) {
-                options.error(res.data);
+                options.error(err.data);
             }
         });
 
@@ -386,7 +386,7 @@ angular.module('fluro.config', ['ngStorage'])
                     //Clear out the inflight
                     inflightRequest = null;
 
-                    if (res == 'invalid_refresh_token') {
+                    if (err.data == 'invalid_refresh_token') {
                         // console.log('your token has expired');
                         controller.deleteSession();
                     } else {

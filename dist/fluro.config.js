@@ -100,7 +100,11 @@ angular.module('fluro.config', ['ngStorage'])
 
         //If we are logging in to a managed account use a different endpoint
         if (options.application) {
-            url = '/fluro/application/signup';
+            if(Fluro.appDevelopmentURL && Fluro.appDevelopmentURL.length) {
+               url = '/fluro/application/signup';
+            } else {
+               url = Fluro.appDevelopmentURL + '/fluro/application/signup';
+            }
         }
 
         //If we are logging in to a managed account use a different endpoint
@@ -163,7 +167,11 @@ angular.module('fluro.config', ['ngStorage'])
 
         //If we are logging in to a managed account use a different endpoint
         if (options.application) {
-            url = '/fluro/application/login';
+            if(Fluro.appDevelopmentURL && Fluro.appDevelopmentURL.length) {
+               url = '/fluro/application/login';
+            } else {
+               url = Fluro.appDevelopmentURL + '/fluro/application/login';
+            }
         }
 
         //If we are logging in to a managed account use a different endpoint
@@ -195,9 +203,9 @@ angular.module('fluro.config', ['ngStorage'])
             if (options.success) {
                 options.success(res.data);
             }
-        }, function(err) {
+        }, function(res) {
             if (options.error) {
-                options.error(err.data);
+                options.error(res.data);
             }
         });
 
@@ -216,14 +224,18 @@ angular.module('fluro.config', ['ngStorage'])
 
         //////////////////////////
 
-        request.then(function(res) {
+        request.success(function(res) {
             
             //Store the authentication 
-            storage.session = res.data;
+            storage.session = res;
             controller.recall();
 
             console.log('Collected User Session', res);
-        }, function(res) {
+        });
+
+        //////////////////////////
+
+        request.error(function(res) {
             console.log('Error collecting token', token)
         });
 
@@ -265,9 +277,9 @@ angular.module('fluro.config', ['ngStorage'])
             if (options.success) {
                 options.success(res.data);
             }
-        }, function(err) {
+        }, function(res) {
             if (options.error) {
-                options.error(err.data);
+                options.error(res.data);
             }
         });
 
@@ -298,7 +310,7 @@ angular.module('fluro.config', ['ngStorage'])
         var storage = controller.storageLocation();
         var request = $http.post(Fluro.apiURL + '/token/account/' + accountId);
 
-        request.then(function(res) {
+        request.success(function(res) {
             if (autoAuthenticate) {
                 storage.session = res.data;
                 controller.recall();
@@ -307,9 +319,9 @@ angular.module('fluro.config', ['ngStorage'])
             if (options.success) {
                 options.success(res.data);
             }
-        }, function(err) {
+        }, function(res) {
             if (options.error) {
-                options.error(err.data);
+                options.error(res.data);
             }
         });
 
@@ -386,7 +398,7 @@ angular.module('fluro.config', ['ngStorage'])
                     //Clear out the inflight
                     inflightRequest = null;
 
-                    if (err.data == 'invalid_refresh_token') {
+                    if (res == 'invalid_refresh_token') {
                         // console.log('your token has expired');
                         controller.deleteSession();
                     } else {

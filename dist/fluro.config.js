@@ -401,7 +401,7 @@ angular.module('fluro.config', ['ngStorage'])
                     //Clear out the inflight
                     inflightRequest = null;
 
-                    if (err == 'invalid_refresh_token') {
+                    if (err.data == 'invalid_refresh_token') {
                         // console.log('your token has expired');
                         controller.deleteSession();
                     } else {

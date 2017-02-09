@@ -204,7 +204,7 @@ angular.module('fluro.config', ['ngStorage'])
 
         //Get the $http service
         var $http = $injector.get('$http');
-        var request = $http.get(url, details);
+        var request = $http.get(url);
 
         //Return the request promise
         return request;

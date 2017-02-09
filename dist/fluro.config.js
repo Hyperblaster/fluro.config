@@ -145,6 +145,75 @@ angular.module('fluro.config', ['ngStorage'])
     };
 
     //////////////////////////
+    //////////////////////////
+    //////////////////////////
+
+    controller.sendResetPasswordRequest = function(details, options) {
+        if (!options) {
+            options = {};
+        }
+
+        //////////////////////////////////////
+
+        //If a full fledged Fluro User
+        //then send directly to the API
+        var url = Fluro.apiURL + '/resend';
+
+        //////////////////////////////////////
+
+        //If we are testing locally then send the request to the remote application url
+        if (Fluro.appDevelopmentURL && Fluro.appDevelopmentURL.length) {
+            console.log('Forgot password request rerouted to app development url', Fluro.appDevelopmentURL);
+            url = Fluro.appDevelopmentURL + '/fluro/application/forgot';
+        } else {
+            //Otherwise just send to the url of the application
+            url = '/fluro/application/forgot';
+        }
+        
+
+        //Get the $http service
+        var $http = $injector.get('$http');
+        var request = $http.post(url, details);
+
+        //Return the request promise
+        return request;
+
+    }
+
+    //////////////////////////
+
+    controller.retrieveUserFromResetToken = function(token, options) {
+        if (!options) {
+            options = {};
+        }
+
+        //////////////////////////////////////
+
+        //Url to login to
+        var url = Fluro.apiURL + '/auth/token/' + token;
+
+        //If we are logging in to a managed account use a different endpoint
+        if (options.application) {
+            if (Fluro.appDevelopmentURL && Fluro.appDevelopmentURL.length) {
+                console.log('Login request rerouted to app development url', Fluro.appDevelopmentURL);
+                url = Fluro.appDevelopmentURL + '/fluro/application/reset/' + token;
+            } else {
+                url = '/fluro/application/reset/' + token;
+            }
+        }
+
+        //Get the $http service
+        var $http = $injector.get('$http');
+        var request = $http.get(url, details);
+
+        //Return the request promise
+        return request;
+
+    }
+
+    //////////////////////////
+    //////////////////////////
+    //////////////////////////
 
     //Submit and send back the user
     controller.login = function(details, options) {

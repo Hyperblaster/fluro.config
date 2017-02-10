@@ -856,7 +856,14 @@ angular.module('fluro.config', ['ngStorage'])
                 var expiry = new Date(storage[key].expires);
                 var now = new Date();
 
-                return (expiry.getTime() <= now.getTime());
+
+
+                var hasExpired = (expiry.getTime() <= now.getTime());
+
+                if(hasExpired) {
+                    console.log('Token expired', expiry.format('g:i:a'), 'is less than', now.format('g:i:a'));
+                }
+                return hasExpired;
             }
         }
 

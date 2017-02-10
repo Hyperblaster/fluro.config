@@ -244,7 +244,7 @@ angular.module('fluro.config', ['ngStorage'])
 
         //Update the current user token with the new details on complete
         request.then(function(res) {
-            console.log('updated user')
+            // console.log('updated user')
             //Manually set the session token
             controller.set(res.data);
         })
@@ -452,6 +452,13 @@ angular.module('fluro.config', ['ngStorage'])
             var expiry = new Date(storage.session.expires);
             var now = new Date();
 
+
+            var hasExpired = (expiry.getTime() <= now.getTime());
+
+            if(hasExpired) {
+                console.log('Token expired', expiry.format('g:i:a'), 'is less than', now.format('g:i:a'), storage.session.expires);
+            }
+
             return (expiry.getTime() <= now.getTime());
         }
     }
@@ -646,14 +653,14 @@ angular.module('fluro.config', ['ngStorage'])
 
                 //Check if it's expired
                 var expired = FluroTokenService.hasExpired();
-                console.log('Has expired', expired, Fluro.tokenExpires);
+                // console.log('Has expired', expired, Fluro.tokenExpires);
 
                 //TESTING expired = true;
 
                 //We've expired
                 if (expired) {
 
-                
+
                     //Wait for a result
                     function refreshSuccess(res) {
 
@@ -715,7 +722,7 @@ angular.module('fluro.config', ['ngStorage'])
     };
 }])
 
-//Create a storage service for keeping tokens
+//Create a storage service for keeping tokens 
 .service('FluroTokenStore', ['$sessionStorage', '$localStorage', '$q', '$injector', 'Fluro', 'FluroTokenService', function($sessionStorage, $localStorage, $q, $injector, Fluro, FluroTokenService) {
 
     //Store instance
@@ -861,13 +868,11 @@ angular.module('fluro.config', ['ngStorage'])
                 var expiry = new Date(storage[key].expires);
                 var now = new Date();
 
-
-
                 var hasExpired = (expiry.getTime() <= now.getTime());
 
-                if(hasExpired) {
-                    console.log('Token expired', expiry.format('g:i:a'), 'is less than', now.format('g:i:a'));
-                }
+                // if(hasExpired) {
+                //     console.log('Token expired', expiry.format('g:i:a'), 'is less than', now.format('g:i:a'));
+                // }
                 return hasExpired;
             }
         }
@@ -878,9 +883,7 @@ angular.module('fluro.config', ['ngStorage'])
         ////////////////////////////
 
         //This function returns the HTTP config required to authenticate the storedUsers request
-        //NOT SURE IF THIS SHOULD BE DEPRECATED
         controller.config = function() {
-
 
             //Now delay the in flight request
             var deferred = $q.defer();
@@ -920,8 +923,6 @@ angular.module('fluro.config', ['ngStorage'])
 
                 //We've expired
                 if (expired) {
-
-                    console.log('TOKEN Expired');
 
                     //Wait for a result
                     function refreshSuccess(res) {

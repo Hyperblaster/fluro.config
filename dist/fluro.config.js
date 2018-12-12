@@ -10,7 +10,7 @@ angular.module('fluro.config', ['ngStorage'])
     /////////////////////////////////////
 
     var config = {
-        apiURL: 'https://apiv2.fluro.io', //Use the basic Fluro API URL by default
+        apiURL: 'https://api.fluro.io', //Use the basic Fluro API URL by default
         token: null, //Set a token to use for Authentication
         sessionStorage: false, //Set to true if you want to use sessionStorage instead of localStorage
     };
@@ -651,12 +651,15 @@ angular.module('fluro.config', ['ngStorage'])
 
     return {
         'responseError': function (response) {
+
+            console.log('Response Error', response);
             switch (response.status) {
                 case 502 :
                 case 504 :
                     return retryRequest(response.config);
                     break;
             }
+
 
             return $q.reject(response);
         },

@@ -643,20 +643,18 @@ angular.module('fluro.config', ['ngStorage'])
 
 
 
-    function retryRequest (httpConfig) {
-        console.log('Retrying request')
-        return $http(httpConfig);
-    };
-
 
     return {
         'responseError': function (response) {
 
             console.log('Response Error', response);
+
             switch (response.status) {
                 case 502 :
                 case 504 :
-                    return retryRequest(response.config);
+                    console.log('Retrying request')
+                    return $http(httpConfig);
+                    
                     break;
             }
 

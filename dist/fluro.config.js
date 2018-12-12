@@ -642,10 +642,26 @@ angular.module('fluro.config', ['ngStorage'])
 .service('FluroAuthentication', ['$q', 'Fluro', '$injector', 'FluroTokenService', function($q, Fluro, $injector, FluroTokenService) {
 
 
+    var incrementalTimeout = 300;
+   
+    function retryRequest (httpConfig) {
+        console.log('Retrying request');
+        var thisTimeout = incrementalTimeout;
+        incrementalTimeout += 1000;
+
+        return $timeout(function() {
+            var $http = $injector.get('$http');
+            return $http(httpConfig);
+        }, thisTimeout);
+    }
+
+
 
 
     return {
         'responseError': function (response) {
+
+
 
             console.log('Response Error', response);
 
@@ -653,14 +669,12 @@ angular.module('fluro.config', ['ngStorage'])
                 case 502 :
                 case 504 :
                     console.log('Retrying request')
-                    var $http = $injector('$http');
-                    return $http(httpConfig);
-
+                    return retryRequest(response.config);
                     break;
             }
 
 
-            return $q.reject(response);
+            return response.config
         },
 
 

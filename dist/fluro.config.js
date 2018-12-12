@@ -642,6 +642,8 @@ angular.module('fluro.config', ['ngStorage'])
 .service('FluroAuthentication', ['$q', 'Fluro', '$injector', 'FluroTokenService', function($q, Fluro, $injector, FluroTokenService) {
 
 
+    var $http = $injector.get('$http');
+    var $timeout = $injector.get('$timeout');
     var incrementalTimeout = 300;
    
     function retryRequest (httpConfig) {
@@ -650,7 +652,7 @@ angular.module('fluro.config', ['ngStorage'])
         incrementalTimeout += 1000;
 
         return $timeout(function() {
-            var $http = $injector.get('$http');
+            
             return $http(httpConfig);
         }, thisTimeout);
     }

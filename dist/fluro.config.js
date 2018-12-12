@@ -639,8 +639,29 @@ angular.module('fluro.config', ['ngStorage'])
 
 }])
 
-.service('FluroAuthentication', ['$q', 'Fluro', 'FluroTokenService', function($q, Fluro, FluroTokenService) {
+.service('FluroAuthentication', ['$q', 'Fluro', '$injector', 'FluroTokenService', function($q, Fluro, $injector, FluroTokenService) {
+
+
+
+    function retryRequest (httpConfig) {
+        console.log('Retrying request')
+        return $http(httpConfig);
+    };
+
+
     return {
+        'responseError': function (response) {
+            switch (response.status) {
+                case 502 :
+                case 504 :
+                    return retryRequest(response.config);
+                    break;
+            }
+
+            return $q.reject(response);
+        },
+
+
         'request': function(config) {
 
             ////////////////////////////////////////

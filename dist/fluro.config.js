@@ -653,8 +653,9 @@ angular.module('fluro.config', ['ngStorage'])
                 case 502 :
                 case 504 :
                     console.log('Retrying request')
+                    var $http = $injector('$http');
                     return $http(httpConfig);
-                    
+
                     break;
             }
 
